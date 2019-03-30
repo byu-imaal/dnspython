@@ -52,6 +52,7 @@ __all__ = [
     'version',
     'wiredata',
     'zone',
+    'https',
 ]
 
 from dns.version import version as __version__
