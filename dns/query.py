@@ -460,6 +460,7 @@ def https(q, where, timeout=None, port=443, af=None, source=None, source_port=0,
         raise BadResponse
     return r
 
+
 def _tls(q, where, timeout=None, port=53, af=None, source=None, source_port=0,
         one_rr_per_rrset=False, ignore_trailing=False):
     wire = q.to_wire()
@@ -470,9 +471,14 @@ def _tls(q, where, timeout=None, port=53, af=None, source=None, source_port=0,
     context.check_hostname = False
     context.verify_mode = ssl.CERT_NONE
     s = context.wrap_socket(s)
+
     if source is not None:
         s.bind(source)
-    s.connect(destination)
+
+    # set our timeout for connect. If it gets past this it'll probably work after
+    s.settimeout(timeout)
+    _connect(s, destination)
+    s.settimeout(None)
     l = len(wire)
 
     tcpmsg = struct.pack("!H", l) + wire
