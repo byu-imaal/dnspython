@@ -478,7 +478,6 @@ def _tls(q, where, timeout=None, port=53, af=None, source=None, source_port=0,
     # set our timeout for connect. If it gets past this it'll probably work after
     s.settimeout(timeout)
     _connect(s, destination)
-    s.settimeout(None)
     l = len(wire)
 
     tcpmsg = struct.pack("!H", l) + wire
