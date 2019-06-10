@@ -824,6 +824,13 @@ class Resolver(object):
 
         *lifetime*, a ``float``, how long query should run before timing out.
 
+        *transport*, a ``text``, how to send the query. Can be udp, tcp, tls, or https.
+
+        *https_method*, a ``text``, method to use if *transport* is set to https. 
+        May be POST or GET
+
+        *path*, a ``text``, path to use if *transport* is set to https. Example: '/query'
+
         Raises ``dns.exception.Timeout`` if no answers could be found
         in the specified lifetime.
 
