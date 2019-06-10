@@ -436,23 +436,21 @@ def _connect(s, address):
             raise v
 
 def https(q, where, timeout=None, port=443, af=None, source=None, source_port=0,
-        one_rr_per_rrset=False, ignore_trailing=False, method=None):
+        one_rr_per_rrset=False, ignore_trailing=False, method=None, path=None):
     wire = q.to_wire()
-    try:
-        if method == 'POST':
-            headers = {"accept": "application/dns-message",
-                       "content-type": "application/dns-message",
-                       "content-length": str(len(wire))}
-            url = "https://{}/dns-query".format(where)
-            res = requests.post(url, data=wire, headers=headers, stream=True, timeout=timeout)
-        else:
-            wire = base64.urlsafe_b64encode(wire).decode('utf-8').strip("=")
-            headers = {"accept": "application/dns-message"}
-            payload = {"dns": wire}
-            url = "https://{}/dns-query".format(where)
-            res = requests.get(url, params=payload, headers=headers, stream=True, timeout=timeout)
-    except requests.ReadTimeout:
-        raise dns.exception.Timeout
+    if method == 'POST':
+        headers = {"accept": "application/dns-message",
+                   "content-type": "application/dns-message",
+                   "content-length": str(len(wire))}
+        url = "https://{}{}".format(where, path)
+        kwargs = {'url': url, 'data': wire, 'headers': headers, 'stream': True, 'timeout': timeout}
+    else:
+        wire = base64.urlsafe_b64encode(wire).decode('utf-8').strip("=")
+        headers = {"accept": "application/dns-message"}
+        url = "https://{}{}?dns={}".format(where, path, wire)
+        kwargs = {'url': url, 'headers': headers, 'stream': True, 'timeout': timeout}
+    print('Querying {}...'.format(url), file=sys.stderr)
+    res = requests.get(**kwargs)
     r = dns.message.from_wire(res.content,
                               one_rr_per_rrset=one_rr_per_rrset, ignore_trailing=ignore_trailing,
                               )

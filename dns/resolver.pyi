@@ -7,7 +7,8 @@ class NXDOMAIN(exception.DNSException):
     ...
 def query(qname : str, rdtype : Union[int,str] = 0, rdclass : Union[int,str] = 0,
           tcp=False, source=None, raise_on_no_answer=True,
-          source_port=0, transport : str = None):
+          source_port=0, transport : str = None, https_method: str = 'GET',
+          path : str = '/dns-query'):
     ...
 class LRUCache:
     def __init__(self, max_size=1000):
@@ -28,5 +29,6 @@ class Resolver:
         self.nameservers : List[str]
     def query(self, qname : str, rdtype : Union[int,str] = rdatatype.A, rdclass : Union[int,str] = rdataclass.IN,
               tcp : bool = False, source : Optional[str] = None, raise_on_no_answer=True,
-              source_port : int = 0, transport : str = None):
+              source_port : int = 0, transport : str = None, https_method: str = 'GET',
+              path : str = '/dns-query'):
         ...

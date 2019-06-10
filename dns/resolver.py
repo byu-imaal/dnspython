@@ -799,7 +799,7 @@ class Resolver(object):
 
     def query(self, qname, rdtype=dns.rdatatype.A, rdclass=dns.rdataclass.IN,
               tcp=False, source=None, raise_on_no_answer=True, source_port=0,
-              lifetime=None, transport=None, https_method=None):
+              lifetime=None, transport=None, https_method=None, path='/dns-query'):
         """Query nameservers to find the answer to the question.
 
         The *qname*, *rdtype*, and *rdclass* parameters may be objects
@@ -911,7 +911,7 @@ class Resolver(object):
                             response = dns.query.https(request, nameserver, timeout,
                                                        port, source=source,
                                                        source_port=source_port,
-                                                       method=https_method)
+                                                       method=https_method, path=path)
                         elif transport == 'tcp':
                             response = dns.query.tcp(request, nameserver, timeout,
                                                      port, source=source,
@@ -1113,7 +1113,8 @@ def reset_default_resolver():
 
 def query(qname, rdtype=dns.rdatatype.A, rdclass=dns.rdataclass.IN,
           tcp=False, source=None, raise_on_no_answer=True,
-          source_port=0, lifetime=None, transport=None):
+          source_port=0, lifetime=None, transport=None, https_method='GET',
+          path='/dns-query'):
     """Query nameservers to find the answer to the question.
 
     This is a convenience function that uses the default resolver
@@ -1125,7 +1126,8 @@ def query(qname, rdtype=dns.rdatatype.A, rdclass=dns.rdataclass.IN,
 
     return get_default_resolver().query(qname, rdtype, rdclass, tcp, source,
                                         raise_on_no_answer, source_port,
-                                        lifetime, transport)
+                                        lifetime, transport, https_method,
+                                        path)
 
 
 def zone_for_name(name, rdclass=dns.rdataclass.IN, tcp=False, resolver=None):

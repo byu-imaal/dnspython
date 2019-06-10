@@ -14,5 +14,5 @@ def udp(q : message.Message, where : str, timeout : Optional[float] = None, port
         ignore_unexpected=False, one_rr_per_rrset=False) -> message.Message:
     ...
 def https(q : message.Message, where : str, timeout : Optional[float] = None, port=443, af : Optional[int] = None, source : Optional[str] = None, source_port=0,
-        ignore_unexpected=False, one_rr_per_rrset=False, method : str = None):
+        ignore_unexpected=False, one_rr_per_rrset=False, method : str = None, path: str = '/dns-query'):
     ...
